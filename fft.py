@@ -8,8 +8,8 @@ plt.style.use('seaborn')
 
 
 
-SAMPLESIZE = 4096 # number of data points to read at a time
-SAMPLERATE = 44100 # time resolution of the recording device (Hz)
+SAMPLESIZE = 1024 # number of data points to read at a time
+SAMPLERATE = 16000 # time resolution of the recording device (Hz)
 
 p = pyaudio.PyAudio() # instantiate PyAudio
 
@@ -28,12 +28,12 @@ def init():
 
 def animate(i):
 	y = np.frombuffer(stream.read(SAMPLESIZE), dtype=np.int16)
-	yf = ((np.abs(fft(y))/4096))[:int(SAMPLESIZE/2)]
+	yf = ((np.abs(fft(y))/SAMPLESIZE))[:int(SAMPLESIZE/2)]
 	xf = np.linspace(0, SAMPLERATE/2-1, SAMPLESIZE/2)
 	line.set_data(xf, yf)
 	return line,
 
-anim = FuncAnimation(fig, animate, init_func=init, frames=200,
+anim = FuncAnimation(fig, animate, init_func=init, frames=10,
 					interval= 20, blit=True)
 
 
