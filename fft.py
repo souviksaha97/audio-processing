@@ -5,11 +5,11 @@ from matplotlib.animation import FuncAnimation
 import scipy
 from scipy.fftpack import fft
 plt.style.use('seaborn')
+import math
 
 
-
-SAMPLESIZE = 1024 # number of data points to read at a time
-SAMPLERATE = 16000 # time resolution of the recording device (Hz)
+SAMPLESIZE = 4096 # number of data points to read at a time
+SAMPLERATE = 44100 # time resolution of the recording device (Hz)
 
 p = pyaudio.PyAudio() # instantiate PyAudio
 
@@ -18,9 +18,9 @@ stream=p.open(format=pyaudio.paInt16,channels=1,rate=SAMPLERATE,input=True,
 
 
 fig = plt.figure()
-ax = plt.axes(xlim=(0, SAMPLERATE/2), ylim=(0, 500))
+ax = plt.axes(xlim=(1, SAMPLERATE/2), ylim=(0, 1000))
 line, =ax.plot([], [], lw = 0.5)
-
+ax.set_xscale('log')
 
 def init():
 	line.set_data([],[])
@@ -33,10 +33,10 @@ def animate(i):
 	line.set_data(xf, yf)
 	return line,
 
-anim = FuncAnimation(fig, animate, init_func=init, frames=10,
+anim = FuncAnimation(fig, animate, init_func=init, frames=200,
 					interval= 20, blit=True)
 
-
+# plt.xscale('log')
 plt.show()
 
 # stop and close the audio stream

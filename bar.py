@@ -19,6 +19,7 @@ stream=p.open(format=pyaudio.paInt16,channels=1,rate=SAMPLERATE,input=True,
 x = range(0, NO_BARS)
 fig = plt.figure()
 ax = plt.axes(xlim=(0, NO_BARS-1), ylim=(0, 1000))
+# ax = plt.axes(xlim=(1, SAMPLERATE/2), ylim=(0, 1000))
 line, =ax.plot([], [], lw = 0.5)
 
 
@@ -28,13 +29,14 @@ def init():
 
 def animate(i):
 	y = np.frombuffer(stream.read(SAMPLESIZE), dtype=np.int16)
-	yf = ((np.abs(fft(y))/500)[:2048])
-	xf = np.linspace(0, SAMPLERATE/2-1, SAMPLESIZE/2)
-	xsplit = np.linspace(0, SAMPLERATE/4-1, NO_BARS, dtype=int)
-	ysplit_index = np.linspace(0, SAMPLESIZE/4-1, NO_BARS, dtype=int)
+	yf = ((np.abs(fft(y))/200))[:int(SAMPLESIZE/2)]
+	# xf = np.linspace(0, SAMPLERATE/2-1, SAMPLESIZE/2)
+	xsplit = np.linspace(0, SAMPLERATE/2-1, NO_BARS, dtype=int)
+	ysplit_index = np.linspace(0, SAMPLESIZE/2-1, NO_BARS, dtype=int)
 	yfsplit = (yf[ysplit_index])
+	# line.set_data(xf, yf)
 	line.set_data(x, yfsplit)
-	print(yfsplit)
+	# print(yfsplit)
 	return line,
 
 anim = FuncAnimation(fig, animate, init_func=init, frames=10,
